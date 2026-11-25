@@ -1,0 +1,12 @@
+{
+  "name": "minu",
+  "private": true,
+  "type": "module",
+  "description": "A blank page. Each machine is a scribble.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

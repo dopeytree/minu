@@ -1,0 +1,11 @@
+config.json
+data
+.testdata
+certs
+*.pem
+*.key
+node_modules
+.git
+.github
+*.log
+.DS_Store

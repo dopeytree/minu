@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!-- Unraid app template. Put this file in a template repository (or /boot/config/plugins/dockerMan/templates-user/)
+     and minu appears under Docker > Add Container. Replace dopeytree with the GitHub account that publishes the image. -->
+<Container version="2">
+  <Name>minu</Name>
+  <Repository>ghcr.io/dopeytree/minu:latest</Repository>
+  <Registry>https://github.com/dopeytree/minu/pkgs/container/minu</Registry>
+  <Network>bridge</Network>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/dopeytree/minu/issues</Support>
+  <Project>https://github.com/dopeytree/minu</Project>
+  <Overview>A living dashboard for your Unraid server. Every container, VM and the server itself shows as dancing light. Sign in with a key or a passkey; open a terminal in any container. On first start the sign-in key is printed in the container log (click the container's icon, then Logs).</Overview>
+  <Category>Tools: Status:</Category>
+  <WebUI>http://[IP]:[PORT:8787]/</WebUI>
+  <Icon>https://raw.githubusercontent.com/dopeytree/minu/main/unraid/icon.png</Icon>
+  <ExtraParams>--cap-add=NET_RAW</ExtraParams>
+  <Config Name="Web port" Target="8787" Default="8787" Mode="tcp" Description="Where the page is served." Type="Port" Display="always" Required="true" Mask="false">8787</Config>
+  <Config Name="Settings and key" Target="/data" Default="/mnt/user/appdata/minu" Mode="rw" Description="Holds your sign-in key (hashed), passkeys and the Unraid connection." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/minu</Config>
+  <Config Name="Docker socket (container terminals)" Target="/var/run/docker.sock" Default="/var/run/docker.sock" Mode="rw" Description="Lets minu open a shell inside a container. Remove it to turn terminals off." Type="Path" Display="advanced" Required="false" Mask="false">/var/run/docker.sock</Config>
+  <Config Name="Unraid address" Target="MINU_UNRAID_URL" Default="" Mode="" Description="Optional. The address of your Unraid web page, for example https://192.168.1.10. You can also enter it in minu's settings." Type="Variable" Display="always" Required="false" Mask="false"></Config>
+  <Config Name="Unraid API key" Target="MINU_UNRAID_KEY" Default="" Mode="" Description="Optional. Unraid, Settings, Management Access, API Keys. You can also enter it in minu's settings." Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="Root shell on the server (off)" Target="MINU_HOST_SHELL" Default="0" Mode="" Description="Set to 1 to allow a root shell on Unraid itself from minu. Anyone signed in gets root, so turn on the authenticator code or a passkey first." Type="Variable" Display="advanced" Required="false" Mask="false">0</Config>
+  <Config Name="HTTPS certificate (optional)" Target="MINU_CERT" Default="" Mode="" Description="Path inside the container to a certificate, for HTTPS. Needed for passkeys unless a reverse proxy or Tailscale provides HTTPS." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="HTTPS key (optional)" Target="MINU_KEY" Default="" Mode="" Description="Path inside the container to the certificate's private key." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="Public address (optional)" Target="MINU_ORIGIN" Default="" Mode="" Description="Only behind a reverse proxy or Tailscale: the https address people use, for example https://minu.example.ts.net" Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+</Container>

@@ -1,0 +1,16 @@
+# secrets and per-install data: never commit these
+config.json
+/data/
+/auth.json
+*.pem
+*.key
+*.crt
+/certs/
+.env
+.env.*
+
+# local scratch and noise
+/.testdata/
+node_modules
+*.log
+.DS_Store

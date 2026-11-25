@@ -1,0 +1,21 @@
+# Install with Dockge or `docker compose up -d`. Nothing else to copy.
+# The sign-in key is printed in the container's log on first start.
+services:
+  minu:
+    image: ghcr.io/dopeytree/minu:latest   # replace dopeytree with the account that publishes the image
+    # build: .                         # or build from this folder instead
+    ports:
+      - "8787:8787"
+    volumes:
+      - ./data:/data                                   # key (hashed), passkeys, Unraid connection
+      - /var/run/docker.sock:/var/run/docker.sock      # container terminals; remove to turn them off
+    environment:
+      MINU_HOST_SHELL: "0"             # "1" allows a root shell on the server itself
+      # MINU_UNRAID_URL: "https://192.168.1.10"        # or enter these in minu's settings
+      # MINU_UNRAID_KEY: ""
+      # MINU_CERT: /data/minu.pem                      # HTTPS (needed for passkeys)
+      # MINU_KEY: /data/minu-key.pem
+      # MINU_ORIGIN: "https://minu.example.ts.net"     # behind a proxy / Tailscale
+    restart: unless-stopped
+    cap_add:
+      - NET_RAW

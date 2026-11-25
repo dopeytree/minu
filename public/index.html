@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <meta name="color-scheme" content="dark" />
+  <title>minu</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M5 19c3-9 7 8 11-1s5-7 8-1 3 4 4 2' fill='none' stroke='%23e4c9a0' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="ink" aria-hidden="true"></canvas>
+  <div id="info">
+    <p id="whisper" hidden></p>
+    <div id="card" hidden></div>
+  </div>
+
+  <div id="finder" class="glass" role="search">
+    <div class="bar">
+      <input id="find" type="text" autocomplete="off" spellcheck="false" placeholder="search" aria-label="search containers and vms" />
+      <button type="button" id="showall" class="icobtn" aria-pressed="false" aria-label="list everything"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7h11M9 12h11M9 17h11"/><path d="M4.5 7h.01M4.5 12h.01M4.5 17h.01"/></svg></button>
+      <button type="button" id="pfilter" class="icobtn" aria-pressed="false" aria-label="show only presets"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5h10a1 1 0 0 1 1 1V20l-6-4.2L6 20V5.5a1 1 0 0 1 1-1z"/></svg></button>
+      <svg class="ico lens" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.2"/><path d="m15.4 15.4 4.9 4.9"/></svg>
+      <kbd id="keys">⌘K</kbd>
+    </div>
+    <div id="presets"></div>
+    <ul id="found" role="listbox"></ul>
+  </div>
+
+  <button id="mark" class="glass" type="button" aria-label="settings">
+    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h8.5M17.5 8H20M4 16h2.5M11.5 16H20"/><circle cx="15" cy="8" r="2.5"/><circle cx="9" cy="16" r="2.5"/></svg>
+  </button>
+  <aside id="settings" class="glass" hidden>
+    <form id="form">
+      <p class="lede">Each scribble is a machine. It dances while it is well. Press / or ⌘K to search, space to step through them, 1 to 9 and 0 to jump to a preset, L for quick links.</p>
+      <label>address <input id="url" name="url" autocomplete="off" spellcheck="false" placeholder="https://tower.local" /></label>
+      <label>key <input id="key" name="key" type="password" autocomplete="off" spellcheck="false" placeholder="saved" /></label>
+      <button type="button" id="bare" class="switch" role="switch" aria-checked="false"><span class="track"></span><span>icons without buttons</span></button>
+      <button type="button" id="cycle" class="switch" role="switch" aria-checked="true"><span class="track"></span><span>cycle through machines</span></button>
+      <button type="button" id="pulse" class="switch" role="switch" aria-checked="false"><span class="track"></span><span>ripple pulse from ping</span></button>
+      <button type="button" id="showvitals" class="switch" role="switch" aria-checked="true"><span class="track"></span><span>show cpu and memory</span></button>
+      <button type="button" id="glyphs" class="switch" role="switch" aria-checked="false"><span class="track"></span><span>icons instead of words</span></button>
+      <button type="button" id="addpasskey" class="textbtn" hidden>add a passkey to this device</button>
+      <button type="button" id="signout" class="textbtn" hidden>sign out</button>
+      <div class="row">
+        <button type="submit" class="act" aria-label="save"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m5.5 12.5 4.3 4.3L18.7 7.6"/></svg></button>
+        <span id="note"></span>
+      </div>
+    </form>
+  </aside>
+
+  <button id="linksbtn" class="glass" type="button" aria-label="quick links (L)">
+    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="4.5" width="6" height="6" rx="1.6"/><rect x="13.5" y="4.5" width="6" height="6" rx="1.6"/><rect x="4.5" y="13.5" width="6" height="6" rx="1.6"/><rect x="13.5" y="13.5" width="6" height="6" rx="1.6"/></svg>
+    <kbd>L</kbd>
+  </button>
+  <div id="links" hidden>
+    <div id="linklist" role="listbox"></div>
+    <div id="pager" hidden></div>
+  </div>
+
+  <button id="srvlogs" class="glass corner" type="button" aria-label="server logs">
+    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6.5h14M5 11h14M5 15.5h9"/></svg>
+  </button>
+  <button id="srvterm" class="glass corner" type="button" aria-label="server terminal">
+    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 7 5.5 5L5 17"/><path d="M12.5 17.5H19"/></svg>
+  </button>
+
+  <div id="term" hidden>
+    <header class="lhead">
+      <h2 id="termtitle"></h2>
+      <span id="termstate"></span>
+    </header>
+    <button id="termclose" class="xbtn" type="button" aria-label="close terminal"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <div id="termbox"></div>
+  </div>
+
+  <div id="login" hidden>
+    <form id="loginform">
+      <h2>minu</h2>
+      <p id="loginmsg"></p>
+      <input id="passcode" name="passcode" type="password" autocomplete="current-password" autocapitalize="off" spellcheck="false" placeholder="key" aria-label="key" />
+      <input id="authcode" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" spellcheck="false" placeholder="authenticator code" aria-label="authenticator code" hidden />
+      <button id="loginbtn" type="submit" class="act" aria-label="sign in"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m5.5 12.5 4.3 4.3 8.9-9.2"/></svg></button>
+      <button id="passkeybtn" type="button" class="textbtn" hidden>use a passkey</button>
+    </form>
+  </div>
+
+  <div id="logs" hidden>
+    <header class="lhead">
+      <h2 id="logtitle"></h2>
+      <nav id="logfiles"></nav>
+    </header>
+    <button id="logclose" class="xbtn" type="button" aria-label="close logs"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <div id="logbody" role="log"></div>
+  </div>
+
+  <svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="water-a" x="-12%" y="-30%" width="124%" height="160%">
+        <feTurbulence id="wt-a" type="fractalNoise" baseFrequency="0.035 0.09" numOctaves="2" seed="3" result="w"/>
+        <feDisplacementMap id="wd-a" in="SourceGraphic" in2="w" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="water-b" x="-12%" y="-30%" width="124%" height="160%">
+        <feTurbulence id="wt-b" type="fractalNoise" baseFrequency="0.035 0.09" numOctaves="2" seed="11" result="w"/>
+        <feDisplacementMap id="wd-b" in="SourceGraphic" in2="w" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <div id="vitals" hidden></div>
+
+  <div id="trouble" class="sr" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
